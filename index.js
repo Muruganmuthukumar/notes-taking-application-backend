@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRouter from './routes/user.route.js';
 import noteRouter from './routes/note.route.js';
+import authRouter from './routes/auth.route.js'
 import bodyParser from 'body-parser';
 import cors from 'cors';
 dotenv.config();
@@ -24,3 +25,4 @@ app.listen(5000,()=>{
 
 app.use('/api', userRouter);
 app.use('/api',noteRouter);
+app.use('/auth',authRouter)
