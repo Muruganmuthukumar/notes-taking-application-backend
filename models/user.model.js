@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true, 
+    unique: true,
   },
   password: {
     type: String,
@@ -15,11 +16,17 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  role: {
-    type: String,
-    default: 'user',
+  tokens: [{
+    token: {
+      type: String,
+      required: true,
+    },
+  }],
+  created_at: {
+    type: Date,
+    default: Date.now,
   },
-},{ timestamps: true });
+}); 
 
 const User = mongoose.model('User', userSchema);
 
