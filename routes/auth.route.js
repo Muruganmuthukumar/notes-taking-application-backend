@@ -4,13 +4,13 @@ import { loginUser, registerUser } from '../controllers/auth.controller.js';
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-
+  const { username, password } = req.body; 
+ 
   try {
     const { userId, token } = await loginUser(username, password);
     res.status(200).json({ userId, token });
   } catch (error) {
-    console.error('Error during login:', error);
+    console.error('Error during login:', error); 
     res.status(401).json({ message: 'Authentication failed' });
   }
 });
@@ -26,5 +26,6 @@ router.post('/register', async (req, res) => {
     res.status(400).json({ message: 'Registration failed' });
   }
 });
+
 
 export default router;

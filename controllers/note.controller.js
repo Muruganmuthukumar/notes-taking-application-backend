@@ -1,14 +1,23 @@
 import Note from '../models/note.model.js'
+import client from '../redis.js'
 
 export const getAllNotes = async (req, res) => {
   try {
-    const notes = await Note.find();
-    res.json(notes);
+    const notes =await client.get('notes')
+    // console.log(notes)
+    if (notes != null) {
+      res.json(JSON.parse(notes));
+    } else {
+      const userId = req.headers['user-id'];
+      const notes = await Note.find({ userId }); 
+      client.setEx('notes', 3600, JSON.stringify(notes))
+      res.json(notes);
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
+ 
 export const getNoteById = async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
@@ -32,6 +41,7 @@ export const createNote = async (req, res) => {
 
   try {
     const newNote = await note.save();
+    client.del('notes')
     res.status(201).json(newNote);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -43,10 +53,11 @@ export const updateNote = async (req, res) => {
     const updatedNote = await Note.findOneAndUpdate(
       { _id: req.params.id },
       req.body,
-      { new: true }
+      { new: true } 
     );
 
     if (updatedNote) {
+      client.del('notes')
       res.json(updatedNote);
     } else {
       res.status(404).json({ message: 'Note not found' });
@@ -61,6 +72,7 @@ export const deleteNote = async (req, res) => {
     const deletedNote = await Note.findByIdAndDelete(req.params.id);
 
     if (deletedNote) {
+      client.del('notes')
       res.json({ message: 'Note deleted' });
     } else {
       res.status(404).json({ message: 'Note not found' });

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -16,6 +17,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  profileImage: {
+    type: String,
+    default: process.env.DEFAULT_PROFILE_IMAGE_URL
+  },
   tokens: [{
     token: {
       type: String,
@@ -26,7 +31,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-}); 
+});
 
 const User = mongoose.model('User', userSchema);
 

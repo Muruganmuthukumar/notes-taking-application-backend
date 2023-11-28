@@ -1,5 +1,3 @@
-// auth.controller.js
-
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
@@ -21,6 +19,7 @@ const comparePassword = async (password, hashedPassword) => {
   const isMatch = await bcrypt.compare(password, hashedPassword);
   return isMatch;
 };
+
 
 const loginUser = async (username, password) => {
   try {
